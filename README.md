@@ -1,51 +1,79 @@
-# 🛍️ Fashion Retail Sales Analysis Dashboard
+# 🛍️ Fashion Retail Analytics: Demand Forecasting & Seasonal Analysis
 
-> **A Data Analytics Case Study**  
-> Uncovering patterns, trends, and business insights from retail sales data in the fashion industry.
+## 1. Project Overview
 
----
+This project analyzes over 3,400 transaction records from a fashion retailer to uncover sales patterns, forecast future demand, and provide actionable, data-driven recommendations. The primary goal is to leverage historical data to optimize inventory, marketing efforts, and overall business strategy.
 
-## 📌 Project Overview
-
-This project is a comprehensive exploratory data analysis (EDA) and dashboard design case study focused on **fashion retail sales data**.  
-Using Python for data preprocessing and Tableau for visual storytelling, I designed a set of dashboards to reveal:
-
-- **Seasonal purchase trends**
-- **Day-of-week performance**
-- **Category-level insights**
-- **Customer purchase behaviors**
-- **Time-based moving averages (4- and 8-month trends)**
-
-It serves both as a portfolio showcase and a practical example of how businesses can use data to make smarter decisions.
+The project involves a full data analysis lifecycle:
+* **Data Cleaning & Preprocessing:** Handling missing values through strategic imputation.
+* **Exploratory Data Analysis (EDA):** Building an interactive Tableau dashboard to identify key business trends.
+* **Time Series Analysis:** Decomposing sales data to understand underlying seasonality and trends.
+* **Predictive Modeling:** Building and evaluating a SARIMA model to forecast future sales.
 
 ---
 
-## 🎯 Objective
+## 2. The Business Problem & Objectives
 
-The goal of this project is to:
+A fashion retailer wants to move from reactive decision-making to a proactive, data-informed strategy. They need to understand their sales patterns better to optimize stock levels, plan marketing campaigns effectively, and maximize revenue.
 
-- **Identify high-performing periods** (e.g., weekdays, months, seasons)
-- Spot **sales slumps** and potential causes
-- Recommend **data-driven strategies** for promotions and inventory
-- Practice and demonstrate **data storytelling**, from raw data to strategic insight
-
----
-
-## 📊 Data Description
-
-The dataset contains transaction-level information from a retail fashion business, including:
-
-- `Order Date`
-- `Purchase Amount`
-- `Product Category`
-- `Customer ID`
-- `Store Region` (if available)
-
-Each row represents a single customer purchase.
+The key business objectives were:
+-   **Identify Peak Sales Periods:** Determine which days of the week, months, and seasons drive the most revenue.
+-   **Understand Customer Behavior:** Analyze payment preferences and product popularity.
+-   **Test for Cross-Selling Opportunities:** Investigate if customers frequently purchase multiple items together.
+-   **Forecast Future Demand:** Predict future sales volume to improve inventory management and resource planning.
 
 ---
 
-## 🔧 Tools & Technologies
+## 3. Data Cleaning and Preparation
+
+The initial dataset contained significant missing values in two critical columns: `Purchase Amount (USD)` and `Review Rating`.
+
+-   **Challenge:** Dropping these rows would have meant losing nearly 20% of the data, potentially biasing the analysis.
+-   **Solution:** I used a **median imputation strategy grouped by `Item Purchased`**. This involved calculating the median price and rating for each unique fashion item and using those specific medians to fill the missing values. This approach is more accurate than using a single global median and preserves the integrity of the dataset.
+-   **Additional Steps:** The `Date Purchase` column was converted to a `datetime` object to enable time-series analysis.
+
+---
+
+## 4. Key Findings & Analysis
+
+### Finding 1: Weekends and End-of-Week are Prime Selling Periods
+- **Analysis:** EDA in Tableau and Python revealed that sales consistently peak towards the end of the week, with **Friday and Saturday** being the highest-performing days for both transaction volume and revenue.
+- **Business Insight:** Marketing efforts and promotions should be concentrated on Thursdays and Fridays to capture this existing customer momentum.
+
+### Finding 2: Customers are Primarily Single-Item Shoppers
+- **Analysis:** I attempted to perform a **Market Basket Analysis** to identify cross-selling opportunities. However, the analysis revealed that the average transaction size (or "basket") was only **1.03 items**.
+- **Business Insight:** This was a critical finding. The data shows that the current business model is driven by single-item purchases, not multi-item baskets. This means cross-selling is not a primary driver of revenue, and marketing should focus on promoting individual hero products.
+
+### Finding 3: Clear Weekly and Monthly Seasonality
+- **Analysis:** Using `statsmodels`, I decomposed the daily sales data. The analysis showed a clear **7-day weekly cycle** and a noticeable **monthly pattern**, with sales often increasing in the latter half of the month.
+- **Business Insight:** This predictable rhythm allows for better inventory planning. For example, stock levels for popular items should be highest leading into the peak weekends and the second half of each month.
+
+---
+
+## 5. Sales Forecasting with SARIMA
+
+A **SARIMA (Seasonal AutoRegressive Integrated Moving Average)** model was built to forecast future daily sales.
+
+-   **Implementation:** The model was trained on the first 80% of the historical sales data and evaluated on the remaining 20%. The model's parameters were tuned to account for the weekly seasonality discovered during the time-series analysis.
+-   **Outcome:** The model successfully captured the underlying sales pattern and produced a reliable forecast, providing the business with a quantitative tool to anticipate future sales volume.
+
+---
+
+## 6. Recommendations for the Business
+
+Based on the analysis, I propose the following actionable recommendations:
+
+1.  **Optimize Marketing Spend:** Shift promotional budgets to **Thursdays and Fridays** to maximize impact during the natural peak sales window.
+2.  **Focus on "Hero Products," Not Bundles:** Since customers typically buy single items, marketing campaigns should focus on promoting individual best-selling products rather than complex multi-buy offers.
+3.  **Implement Data-Driven Inventory Management:** Use the demand forecast and seasonal insights to ensure popular items are well-stocked ahead of peak periods (weekends, end-of-month) to avoid stockouts and lost revenue.
+
+---
+
+## 7. Tools & Technologies
+
+-   **Data Manipulation & Analysis:** Python, Pandas
+-   **Time Series Analysis & Forecasting:** `statsmodels` (for seasonal decomposition and SARIMA)
+-   **Data Visualization & Dashboards:** Tableau, Matplotlib, Seaborn## 🔧 Tools & Technologies
 
 | Tool       | Purpose                            |
 |------------|-------------------------------------|
@@ -53,26 +81,6 @@ Each row represents a single customer purchase.
 | Pandas     | Aggregations and feature creation   |
 | Tableau 📈 | Interactive dashboards and charts   |
 | Matplotlib / Seaborn | Early-stage visual EDA     |
-
----
-
-## 🚀 Key Features
-
-### ✅ Weekly Trends Analysis
-- Sales volume and revenue grouped by **weekday**
-- Identifies peak and off-peak days
-
-### ✅ Seasonal Performance
-- Monthly sales aggregation with **4- and 8-month moving averages**
-- Detects **long-term trends and seasonality**
-
-### ✅ Category Breakdown
-- Performance of different **product categories**
-- Helps guide marketing and merchandising decisions
-
-### ✅ Actionable Insights
-- Recommends **high-impact weekdays** (e.g., Friday) for flash sales
-- Suggests potential **restock cycles** or campaign timings
 
 ---
 
@@ -84,14 +92,6 @@ Each row represents a single customer purchase.
 
 ---
 
-## 🧠 What I Learned
-
-- How to **structure a business-focused dashboard** for retail analytics
-- The importance of **data aggregation levels** (e.g., daily vs. weekly vs. monthly)
-- How to use **moving averages** to detect macro trends
-- How to turn messy data into **clean, insight-rich dashboards**
-
----
 
 ## 🗂 Folder Structure
 
